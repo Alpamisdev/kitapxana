@@ -36,5 +36,7 @@ Route::apiResource('orders', OrderController::class);
 //Searching
 Route::controller(SearcheController::class)->group(function () {
     Route::get('/searchbook/{book:name}', 'search_book');
-    Route::get('/facultet/{student:name}', 'search_student');
+    Route::get('/searchfaculty', 'search_faculty');
+    Route::get('/searchgroup','search_group');
+    Route::get('/searchstudent', 'search_student');
 });

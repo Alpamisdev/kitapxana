@@ -30,17 +30,34 @@ class SearcheController extends Controller
            return $books;
     }
 
-    public function search_student($student){
-
-        $data = FacultyResurce::collection(Facultet::with('groups')->get());
+    public function search_faculty(Request $request){
+        $data = Facultet::select('facultets.id as facultet_id','facultets.name as facultet_name')
+            ->where('facultets.name', 'LIKE',  "%{$request->faculty}%")
+            ->get();
         return $data;
 
-//        $data = Facultet::select('facultets.id as facultet_id','facultets.name as facultet_name', 'groups.id as group_id', 'groups.name as group_name', 'students.id as student_id', 'students.name as student_name', 'phone')
-//            ->join('groups', 'facultets.id', 'groups.id')
-//            ->join('students', 'groups.id', 'students.group_id')
-//            ->where('students.name', 'LIKE', "%{$student}%")
-//            ->get();
+    }
+
+    public  function search_group(Request $request){
+        $data = Group::select('groups.id as group_id','groups.name as group_name')
+            ->where('groups.name', 'LIKE',  "%{$request->group}%")
+            ->get();
+        return $data;
+    }
+
+    public function search_student(Request $request){
+
+//        $data = FacultyResurce::collection(Facultet::with('groups')->where('name', 'like', "%{$student}%")->get());
 //        return $data;
+
+        $data = Facultet::select('facultets.id as facultet_id','facultets.name as facultet_name', 'groups.id as group_id', 'groups.name as group_name', 'students.id as student_id', 'students.name as student_name', 'phone')
+            ->join('groups', 'facultets.id', 'groups.id')
+            ->join('students', 'groups.id', 'students.group_id')
+            ->where('facultets.name', 'LIKE',  "%{$request->facultet}%")
+            ->where('groups.name', 'LIKE', "%{$request->group}%")
+            ->where('students.name', 'LIKE', "%{$request->student}%")
+            ->get();
+        return $data;
 
 //        $facultets = Facultet::all();
 //        $data = [];
