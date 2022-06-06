@@ -40,3 +40,5 @@ Route::controller(SearcheController::class)->group(function () {
     Route::get('/searchgroup','search_group');
     Route::get('/searchstudent', 'search_student');
 });
+
+Route::post('/loginstudent', [\App\Http\Controllers\LoginStudent::class,'login_student']);

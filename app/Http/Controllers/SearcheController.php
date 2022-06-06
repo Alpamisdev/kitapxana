@@ -8,24 +8,22 @@ use App\Models\Book;
 use App\Models\Facultet;
 use App\Models\Group;
 use App\Models\Student;
+use Illuminate\Support\Facades\Validator;
 
 class SearcheController extends Controller
 {
-    private $response =
-        [
-            'message'=>'succses',
-            'code'=>200,
-            'payload' => []
-        ];
-    public function search_book($book){
+
+    public function search_book($request){
 
            $books = Book::select('ganers.name as ganer_name', 'authors.name as author_name', 'books.name as name', 'count' )
                ->join('ganers', 'books.ganer_id', '=', 'ganers.id')
                ->join('authors', 'books.author_id', '=', 'authors.id')
-               ->where('books.name', 'LIKE', "%{$book}%")
-               ->orwhere('authors.name', 'LIKE', "%{$book}%")
-               ->orwhere('ganers.name', 'LIKE', "%{$book}%")
+               ->where('books.name', 'LIKE', "%{$request->book}%")
+//               ->orwhere('authors.name', 'LIKE', "%{$request}%")
+//               ->orwhere('ganers.name', 'LIKE', "%{$request}%")
                ->get();
+
+            $this->response['payload'] = $books;
 
            return $books;
     }
@@ -39,6 +37,7 @@ class SearcheController extends Controller
     }
 
     public  function search_group(Request $request){
+
         $data = Group::select('groups.id as group_id','groups.name as group_name')
             ->where('groups.name', 'LIKE',  "%{$request->group}%")
             ->get();
@@ -53,8 +52,8 @@ class SearcheController extends Controller
         $data = Facultet::select('facultets.id as facultet_id','facultets.name as facultet_name', 'groups.id as group_id', 'groups.name as group_name', 'students.id as student_id', 'students.name as student_name', 'phone')
             ->join('groups', 'facultets.id', 'groups.id')
             ->join('students', 'groups.id', 'students.group_id')
-            ->where('facultets.name', 'LIKE',  "%{$request->facultet}%")
-            ->where('groups.name', 'LIKE', "%{$request->group}%")
+//            ->where('facultets.name', 'LIKE',  "%{$request->facultet}%")
+//            ->where('groups.name', 'LIKE', "%{$request->group}%")
             ->where('students.name', 'LIKE', "%{$request->student}%")
             ->get();
         return $data;
